@@ -45,7 +45,7 @@ jobs:
       - run:
           name: Upload binary
           command: |
-            ghr $CIRCLE_TAG build/lib/py_sourcemap/*.so
+            $CIRCLE_TAG && ghr $CIRCLE_TAG build/lib/py_sourcemap/*.so
       - run:
           name: Prune the output files
           command: |
@@ -77,7 +77,7 @@ jobs:
       - run:
           name: Upload binary
           command: |
-            ghr $CIRCLE_TAG build/lib/py_sourcemap/*.so
+            $CIRCLE_TAG && ghr $CIRCLE_TAG build/lib/py_sourcemap/*.so
       - run:
           name: Prune the output files
           command: |
@@ -109,7 +109,9 @@ jobs:
       - run:
           name: Upload binary
           command: |
-            ghr $CIRCLE_TAG build/lib/py_sourcemap/*.so
+            if [ "$CIRCLE_TAG" != "" ]; then \
+              ghr $CIRCLE_TAG build/lib/py_sourcemap/*.so
+            fi
       - run:
           name: Prune the output files
           command: |
