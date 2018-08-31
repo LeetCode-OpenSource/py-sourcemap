@@ -2,14 +2,15 @@
 
 extern crate pyo3;
 extern crate source_map_mappings;
-#[macro_use] extern crate serde_derive;
+#[macro_use]
+extern crate serde_derive;
 extern crate serde;
 extern crate serde_json;
 
 use std::fs::File;
 
 use pyo3::prelude::*;
-use source_map_mappings::{Bias, Mapping, Mappings, parse_mappings};
+use source_map_mappings::{parse_mappings, Bias, Mapping, Mappings};
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -34,13 +35,11 @@ impl SourcemapParser {
   #[new]
   fn __new__(obj: &PyRawObject, path: &str) -> PyResult<()> {
     let file = File::open(path).map_err(PyErr::from)?;
-    let raw_sourcemap: RawSourceMap = serde_json::from_reader(file).map_err(|e| {
-      PyErr::new::<exc::TypeError, _>(format!("{:?}", e))
-    })?;
+    let raw_sourcemap: RawSourceMap = serde_json::from_reader(file)
+      .map_err(|e| PyErr::new::<exc::TypeError, _>(format!("{:?}", e)))?;
     let mapping_bytes = raw_sourcemap.mappings.as_bytes();
-    let mappings = parse_mappings(mapping_bytes).map_err(|_| {
-      PyErr::new::<exc::TypeError, _>(format!("Parse Sourcemap failed: {}", path))
-    })?;
+    let mappings = parse_mappings(mapping_bytes)
+      .map_err(|_| PyErr::new::<exc::TypeError, _>(format!("Parse Sourcemap failed: {}", path)))?;
     let sources = raw_sourcemap.sources;
     let names = raw_sourcemap.names;
     obj.init(move |_| SourcemapParser {
@@ -50,17 +49,36 @@ impl SourcemapParser {
     })
   }
 
-  fn original_location_for(&self, generated_line: u32, generated_column: u32) -> PyResult<(u32, u32, Option<String>, Option<String>)> {
-    if let Some(Mapping { original, .. }) = self.parsed_map.original_location_for(generated_line, generated_column, Bias::LeastUpperBound) {
+  fn original_location_for(
+    &self,
+    generated_line: u32,
+    generated_column: u32,
+  ) -> PyResult<(u32, u32, Option<String>, Option<String>)> {
+    if let Some(Mapping { original, .. }) =
+      self
+        .parsed_map
+        .original_location_for(generated_line, generated_column, Bias::LeastUpperBound)
+    {
       match original {
         Some(location) => {
           let name = location.name.and_then(|index| {
-            self.names.get(index as usize).map(|str_slice| str_slice.to_string())
+            self
+              .names
+              .get(index as usize)
+              .map(|str_slice| str_slice.to_string())
           });
-          let source = self.sources.get(location.source as usize).map(|str_slice| str_slice.to_string());
-          return Ok((location.original_line, location.original_column, source, name))
-        },
-        None => return Err(PyErr::new::<exc::TypeError, _>("No original lines"))
+          let source = self
+            .sources
+            .get(location.source as usize)
+            .map(|str_slice| str_slice.to_string());
+          return Ok((
+            location.original_line + 1,
+            location.original_column + 1,
+            source,
+            name,
+          ));
+        }
+        None => return Err(PyErr::new::<exc::TypeError, _>("No original lines")),
       };
     }
     Err(PyErr::new::<exc::TypeError, _>("No sources found"))
