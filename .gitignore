@@ -4,3 +4,8 @@ Cargo.lock
 *.pyc
 build
 *.so
+.eggs
+*.egg-info
+
+# editor related
+.vscode

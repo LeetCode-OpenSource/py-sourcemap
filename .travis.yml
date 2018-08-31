@@ -1,0 +1,26 @@
+language: python
+python:
+  - "3.5"
+  - "3.6"
+  - "3.7"
+os: osx
+cache: cargo
+before_install:
+  - brew update
+  - brew install rust
+  - rustup default nightly
+
+install:
+  - pip install -r requirements-dev.txt
+
+script: |
+  python compile.py build
+
+deploy:
+  provider: releases
+  api_key:
+    secure: $GITHUB_TOKEN
+  file: build/lib/py_sourcemap/py_sourcemap.so
+  skip_cleanup: true
+  on:
+    tags: true

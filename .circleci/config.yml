@@ -1,0 +1,157 @@
+version: 2
+jobs:
+  cargo_fetch:
+    docker:
+      - image: broooooklyn/rust-python:latest
+    working_directory: /mnt/crate
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - cargo-v1-{{ checksum "Cargo.toml" }}-
+            - cargo-v1-
+      - run:
+          name: fetch and update
+          command: |
+            cargo update && \
+            cargo fetch
+      - persist_to_workspace:
+          root: "."
+          paths:
+            - Cargo.lock
+      - save_cache:
+          key: cargo-v1-{{ checksum "Cargo.toml" }}-{{ checksum "Cargo.lock" }}
+          paths:
+            - /usr/local/cargo/registry
+            - /usr/local/cargo/git
+  build35:
+    docker:
+      - image: broooooklyn/rust-python:3.5
+    working_directory: /mnt/crate
+    steps:
+      - checkout
+      - attach_workspace:
+          at: "."
+      - restore_cache:
+          keys:
+            - cargo-v1-{{ checksum "Cargo.toml" }}-{{ checksum "Cargo.lock" }}
+      - run:
+          name: Print version information
+          command: rustc --version; cargo --version
+      - run:
+          name: Build 35
+          command: |
+            python compile.py build
+      - run:
+          name: Upload binary
+          command: |
+            ghr $CIRCLE_TAG build/lib/py_sourcemap/*.so
+      - run:
+          name: Prune the output files
+          command: |
+            for file in target/release/* target/release/.??*; do
+              [ -d $file -o ! -x $file ] && rm -r $file
+            done
+      - persist_to_workspace:
+          root: "."
+          paths:
+            - target/release/*
+  build36:
+    docker:
+      - image: broooooklyn/rust-python:3.6
+    working_directory: /mnt/crate
+    steps:
+      - checkout
+      - attach_workspace:
+          at: "."
+      - restore_cache:
+          keys:
+            - cargo-v1-{{ checksum "Cargo.toml" }}-{{ checksum "Cargo.lock" }}
+      - run:
+          name: Print version information
+          command: rustc --version; cargo --version
+      - run:
+          name: Build 36
+          command: |
+            python compile.py build
+      - run:
+          name: Upload binary
+          command: |
+            ghr $CIRCLE_TAG build/lib/py_sourcemap/*.so
+      - run:
+          name: Prune the output files
+          command: |
+            for file in target/release/* target/release/.??*; do
+              [ -d $file -o ! -x $file ] && rm -r $file
+            done
+      - persist_to_workspace:
+          root: "."
+          paths:
+            - target/release/*
+  build37:
+    docker:
+      - image: broooooklyn/rust-python:3.7
+    working_directory: /mnt/crate
+    steps:
+      - checkout
+      - attach_workspace:
+          at: "."
+      - restore_cache:
+          keys:
+            - cargo-v1-{{ checksum "Cargo.toml" }}-{{ checksum "Cargo.lock" }}
+      - run:
+          name: Print version information
+          command: rustc --version; cargo --version
+      - run:
+          name: Build 37
+          command: |
+            python compile.py build
+      - run:
+          name: Upload binary
+          command: |
+            ghr $CIRCLE_TAG build/lib/py_sourcemap/*.so
+      - run:
+          name: Prune the output files
+          command: |
+            for file in target/release/* target/release/.??*; do
+              [ -d $file -o ! -x $file ] && rm -r $file
+            done
+      - persist_to_workspace:
+          root: "."
+          paths:
+            - target/release/*
+
+  nightly:
+    machine: true
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    steps:
+      - checkout
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run: docker build . -t broooooklyn/rust-python:3.5 --build-arg PYTHON_VERSION=3.5
+      - run: docker push broooooklyn/rust-python:3.5
+      - run: docker build . -t broooooklyn/rust-python:3.6 --build-arg PYTHON_VERSION=3.6
+      - run: docker push broooooklyn/rust-python:3.6
+      - run: docker build . -t broooooklyn/rust-python:3.7 --build-arg PYTHON_VERSION=3.7
+      - run: docker tag broooooklyn/rust-python:3.7 broooooklyn/rust-python:latest
+      - run: docker push broooooklyn/rust-python:3.7
+      - run: docker push broooooklyn/rust-python:latest
+workflows:
+  version: 2
+  build_all_versions:
+    jobs:
+      - cargo_fetch
+      - build35:
+          requires:
+            - cargo_fetch
+      - build36:
+          requires:
+            - cargo_fetch
+      - build37:
+          requires:
+            - cargo_fetch
