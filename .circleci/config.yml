@@ -43,12 +43,6 @@ jobs:
           command: |
             python compile.py build
       - run:
-          name: Upload binary
-          command: |
-            if [ "$CIRCLE_TAG" != "" ]; then \
-              ghr "${CIRCLE_TAG}" build/lib/py_sourcemap/*.so
-            fi
-      - run:
           name: Prune the output files
           command: |
             for file in target/release/* target/release/.??*; do
@@ -57,7 +51,7 @@ jobs:
       - persist_to_workspace:
           root: "."
           paths:
-            - target/release/*
+            - ./*
   build36:
     docker:
       - image: broooooklyn/rust-python:3.6
@@ -77,12 +71,6 @@ jobs:
           command: |
             python compile.py build
       - run:
-          name: Upload binary
-          command: |
-            if [ "$CIRCLE_TAG" != "" ]; then \
-              ghr "${CIRCLE_TAG}" build/lib/py_sourcemap/*.so
-            fi
-      - run:
           name: Prune the output files
           command: |
             for file in target/release/* target/release/.??*; do
@@ -91,7 +79,7 @@ jobs:
       - persist_to_workspace:
           root: "."
           paths:
-            - target/release/*
+            - ./*
   build37:
     docker:
       - image: broooooklyn/rust-python:3.7
@@ -111,12 +99,6 @@ jobs:
           command: |
             python compile.py build
       - run:
-          name: Upload binary
-          command: |
-            if [ "$CIRCLE_TAG" != "" ]; then \
-              ghr "${CIRCLE_TAG}" build/lib/py_sourcemap/*.so
-            fi
-      - run:
           name: Prune the output files
           command: |
             for file in target/release/* target/release/.??*; do
@@ -125,7 +107,34 @@ jobs:
       - persist_to_workspace:
           root: "."
           paths:
-            - target/release/*
+            - ./*
+  
+  deploy35:
+    docker:
+      - image: broooooklyn/rust-python:3.5
+    working_directory: /mnt/crate
+    steps:
+      - attach_workspace:
+          at: "."
+      - ghr "${CIRCLE_TAG}" build/lib/py_sourcemap/*.so
+
+  deploy36:
+    docker:
+      - image: broooooklyn/rust-python:3.6
+    working_directory: /mnt/crate
+    steps:
+      - attach_workspace:
+          at: "."
+      - ghr "${CIRCLE_TAG}" build/lib/py_sourcemap/*.so
+
+  deploy37:
+    docker:
+      - image: broooooklyn/rust-python:3.7
+    working_directory: /mnt/crate
+    steps:
+      - attach_workspace:
+          at: "."
+      - ghr "${CIRCLE_TAG}" build/lib/py_sourcemap/*.so
 
   nightly:
     machine: true
@@ -155,9 +164,33 @@ workflows:
       - build35:
           requires:
             - cargo_fetch
+      - deploy35:
+          requires:
+            - build35
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              only: master
       - build36:
           requires:
             - cargo_fetch
+      - deploy36:
+          requires:
+            - build36
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              only: master
       - build37:
           requires:
             - cargo_fetch
+      - deploy37:
+          requires:
+            - build37
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              only: master
