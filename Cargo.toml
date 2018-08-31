@@ -1,0 +1,12 @@
+[package]
+name = "py-sourcemap"
+version = "0.1.0"
+authors = ["LongYinan <lynweklm@gmail.com>"]
+
+[lib]
+name = "py_sourcemap"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version="0.4", features=["extension-module"] }
+source-map-mappings = { version="0.5" }
