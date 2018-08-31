@@ -116,7 +116,7 @@ jobs:
     steps:
       - attach_workspace:
           at: "."
-      - ghr "${CIRCLE_TAG}" build/lib/py_sourcemap/*.so
+      - run: ghr "${CIRCLE_TAG}" build/lib/py_sourcemap/*.so
 
   deploy36:
     docker:
@@ -125,7 +125,7 @@ jobs:
     steps:
       - attach_workspace:
           at: "."
-      - ghr "${CIRCLE_TAG}" build/lib/py_sourcemap/*.so
+      - run: ghr "${CIRCLE_TAG}" build/lib/py_sourcemap/*.so
 
   deploy37:
     docker:
@@ -134,7 +134,7 @@ jobs:
     steps:
       - attach_workspace:
           at: "."
-      - ghr "${CIRCLE_TAG}" build/lib/py_sourcemap/*.so
+      - run: ghr "${CIRCLE_TAG}" build/lib/py_sourcemap/*.so
 
   nightly:
     machine: true
@@ -170,8 +170,6 @@ workflows:
           filters:
             tags:
               only: /.*/
-            branches:
-              only: master
       - build36:
           requires:
             - cargo_fetch
@@ -181,8 +179,6 @@ workflows:
           filters:
             tags:
               only: /.*/
-            branches:
-              only: master
       - build37:
           requires:
             - cargo_fetch
@@ -192,5 +188,3 @@ workflows:
           filters:
             tags:
               only: /.*/
-            branches:
-              only: master
