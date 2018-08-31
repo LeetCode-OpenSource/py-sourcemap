@@ -1,6 +1,6 @@
 [package]
 name = "py-sourcemap"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["LongYinan <lynweklm@gmail.com>"]
 publish = false
 
