@@ -1,5 +1,19 @@
+import sys
+
 from setuptools import setup
 from setuptools_rust import Binding, RustExtension
+
+try:
+  from setuptools_rust import RustExtension
+except ImportError:
+  import subprocess
+
+  errno = subprocess.call([sys.executable, "-m", "pip", "install", "setuptools-rust"])
+  if errno:
+    print("Please install setuptools-rust package")
+    raise SystemExit(errno)
+  else:
+    from setuptools_rust import RustExtension
 
 setup(name='py-sourcemap',
   version='0.1',
