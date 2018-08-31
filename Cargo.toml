@@ -2,6 +2,7 @@
 name = "py-sourcemap"
 version = "0.1.0"
 authors = ["LongYinan <lynweklm@gmail.com>"]
+publish = false
 
 [lib]
 name = "py_sourcemap"
