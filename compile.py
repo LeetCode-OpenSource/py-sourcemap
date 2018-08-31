@@ -1,10 +1,9 @@
 import sys
 
 from setuptools import setup
-from setuptools_rust import Binding, RustExtension
 
 try:
-  from setuptools_rust import RustExtension
+  from setuptools_rust import Binding, RustExtension
 except ImportError:
   import subprocess
 
@@ -13,7 +12,7 @@ except ImportError:
     print("Please install setuptools-rust package")
     raise SystemExit(errno)
   else:
-    from setuptools_rust import RustExtension
+    from setuptools_rust import Binding, RustExtension
 
 setup(name='py-sourcemap',
   version='0.1',
