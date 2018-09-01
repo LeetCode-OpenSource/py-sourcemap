@@ -116,7 +116,7 @@ jobs:
     steps:
       - attach_workspace:
           at: "."
-      - run: ghr "${CIRCLE_TAG}" build/lib/py_sourcemap/*.so
+      - run: ghr -u "${CIRCLE_USERNAME}" -r "${CIRCLE_PROJECT_REPONAME}"" "${CIRCLE_TAG}" build/lib/py_sourcemap/*.so
 
   deploy36:
     docker:
@@ -125,7 +125,7 @@ jobs:
     steps:
       - attach_workspace:
           at: "."
-      - run: ghr "${CIRCLE_TAG}" build/lib/py_sourcemap/*.so
+      - run: ghr -u "${CIRCLE_USERNAME}" -r "${CIRCLE_PROJECT_REPONAME}"" "${CIRCLE_TAG}" build/lib/py_sourcemap/*.so
 
   deploy37:
     docker:
@@ -134,7 +134,7 @@ jobs:
     steps:
       - attach_workspace:
           at: "."
-      - run: ghr "${CIRCLE_TAG}" build/lib/py_sourcemap/*.so
+      - run: ghr -u "${CIRCLE_USERNAME}" -r "${CIRCLE_PROJECT_REPONAME}"" "${CIRCLE_TAG}" build/lib/py_sourcemap/*.so
 
   nightly:
     machine: true
