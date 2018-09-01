@@ -10,9 +10,6 @@ before_install:
   - brew install rust
   - rustup default nightly
 
-install:
-  - pip install -r requirements-dev.txt
-
 script: |
   python compile.py build
 

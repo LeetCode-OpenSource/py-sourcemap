@@ -117,7 +117,7 @@ jobs:
       - attach_workspace:
           at: "."
       - run: export GIT_TAG="$(git describe --tags $(git rev-list --tags --max-count=1))"
-      - run: ghr -u "${CIRCLE_USERNAME}" -r "${CIRCLE_PROJECT_REPONAME}" "${GIT_TAG}" build/lib/py_sourcemap/*.so
+      - run: ghr -u "${CIRCLE_PROJECT_USERNAME}" -r "${CIRCLE_PROJECT_REPONAME}" "${GIT_TAG}" build/lib/py_sourcemap/*.so
 
   deploy36:
     docker:
@@ -127,7 +127,7 @@ jobs:
       - attach_workspace:
           at: "."
       - run: export GIT_TAG="$(git describe --tags $(git rev-list --tags --max-count=1))"
-      - run: ghr -u "${CIRCLE_USERNAME}" -r "${CIRCLE_PROJECT_REPONAME}" "${GIT_TAG}" build/lib/py_sourcemap/*.so
+      - run: ghr -u "${CIRCLE_PROJECT_USERNAME}" -r "${CIRCLE_PROJECT_REPONAME}" "${GIT_TAG}" build/lib/py_sourcemap/*.so
 
   deploy37:
     docker:
@@ -137,7 +137,7 @@ jobs:
       - attach_workspace:
           at: "."
       - run: export GIT_TAG="$(git describe --tags $(git rev-list --tags --max-count=1))"
-      - run: ghr -u "${CIRCLE_USERNAME}" -r "${CIRCLE_PROJECT_REPONAME}" "${GIT_TAG}" build/lib/py_sourcemap/*.so
+      - run: ghr -u "${CIRCLE_PROJECT_USERNAME}" -r "${CIRCLE_PROJECT_REPONAME}" "${GIT_TAG}" build/lib/py_sourcemap/*.so
 
   nightly:
     machine: true
