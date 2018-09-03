@@ -26,12 +26,12 @@ class PostInstallCommand(install):
                                     sys.version_info.minor)
         system = platform.system()
         if system == 'Linux':
-            platform = 'x86_64-linux-gnu'
+            usr_platform = 'x86_64-linux-gnu'
         else:
             raise Exception('This lib is only supporting Linux for now.')
         download_url = url_template.format(tag=version_tag,
                                            py_ver=py_version,
-                                           platform=platform)
+                                           platform=usr_platform)
         dist = os.path.join(self.build_lib, 'py_sourcemap/py_sourcemap.so')
         if not local_build:
             with open(dist, 'wb') as f:
