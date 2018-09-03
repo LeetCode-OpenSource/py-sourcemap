@@ -3,9 +3,9 @@ rust:
   - nightly
 os: osx
 env:
-  - PYTHON_VERSION=3.5.6
-  - PYTHON_VERSION=3.6.6
-  - PYTHON_VERSION=3.7.0
+  - PYTHON_VERSION=3.5.6 PYTHON_NATIVE_ABI=35
+  - PYTHON_VERSION=3.6.6 PYTHON_NATIVE_ABI=36
+  - PYTHON_VERSION=3.7.0 PYTHON_NATIVE_ABI=37
 
 cache: cargo
 before_install:
@@ -23,13 +23,16 @@ install:
 script: |
   python compile.py build && \
   cp build/lib/py_sourcemap/*.so py_sourcemap/py_sourcemap.so && \
+  mkdir -p natives && \
+  cp py_sourcemap/py_sourcemap.so "natives/py_sourcemap.cpython-m${PYTHON_NATIVE_ABI}-x86_64-apple-darwin.so" && \
   $HOME/.local/bin/nosetests
 
 deploy:
   provider: releases
   api_key:
     secure: $GITHUB_TOKEN
-  file: py_sourcemap/py_sourcemap.so
+  file_glob: true
+  file: natives/*.so
   skip_cleanup: true
   on:
     tags: true
