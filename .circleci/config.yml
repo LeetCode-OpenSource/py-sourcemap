@@ -2,7 +2,7 @@ version: 2
 jobs:
   cargo_fetch:
     docker:
-      - image: broooooklyn/rust-python:latest
+      - image: rust:latest
     working_directory: /mnt/crate
     steps:
       - checkout
@@ -111,7 +111,7 @@ jobs:
   
   deploy35:
     docker:
-      - image: broooooklyn/rust-python:3.5
+      - image: tsub/ghr:latest
     working_directory: /mnt/crate
     steps:
       - attach_workspace:
@@ -124,7 +124,7 @@ jobs:
 
   deploy36:
     docker:
-      - image: broooooklyn/rust-python:3.6
+      - image: tsub/ghr:latest
     working_directory: /mnt/crate
     steps:
       - attach_workspace:
@@ -137,7 +137,7 @@ jobs:
 
   deploy37:
     docker:
-      - image: broooooklyn/rust-python:3.7
+      - image: tsub/ghr:latest
     working_directory: /mnt/crate
     steps:
       - attach_workspace:
