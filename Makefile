@@ -1,0 +1,2 @@
+format:
+	yapf **/*.py -i
