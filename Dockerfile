@@ -1,29 +1,28 @@
-FROM ubuntu:16.04
-
-ENV GHR_VERSION="0.9.0"
+FROM ubuntu:18.04
 
 ARG PYTHON_VERSION=3.6
 
 ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
     PATH=/usr/local/cargo/bin:$PATH \
-    RUST_VERSION=1.28.0
+    RUST_VERSION=nightly
 
 RUN apt-get update && \
-    apt-get install software-properties-common python-software-properties -y && \
+    echo $PYTHON_VERSION && \
+    apt-get install software-properties-common -y --no-install-recommends && \
     add-apt-repository ppa:deadsnakes/ppa -y && \
-    apt-get update && \
-    apt-get install python${PYTHON_VERSION} python3-pip wget git curl -y && \
+    apt-get install python${PYTHON_VERSION} wget build-essential git curl -y --no-install-recommends && \
     apt-get upgrade -y && \
     apt-get autoremove -y && \
     ln -sf /usr/bin/python${PYTHON_VERSION} /usr/bin/python && \
-    curl -fSL -o ghr.tar.gz "https://github.com/tcnksm/ghr/releases/download/v${GHR_VERSION}/ghr_v${GHR_VERSION}_linux_amd64.tar.gz" && \
-    tar -xvzf ghr.tar.gz && \
-    mv ghr_v0.9.0_linux_amd64/ghr /usr/local/bin && \
-    chown root:root /usr/local/bin/ghr && \
-    rm -r \
-        ghr.tar.gz \
-        ghr_v0.9.0_linux_amd64
+    if [ $PYTHON_VERSION = '3.6' ]; \
+    then \
+      apt-get install python3-pip -y --no-install-recommends && \
+      ln -sf /usr/bin/pip3 /usr/bin/pip; \
+    else \
+      curl https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION}; \
+    fi && \
+    pip install --upgrade pip
 
 RUN set -eux; \
     dpkgArch="$(dpkg --print-architecture)"; \
@@ -44,4 +43,6 @@ RUN set -eux; \
     rustup default nightly && \
     rustup --version; \
     cargo --version; \
-    rustc --version;
+    rustc --version; \
+    python -V; \
+    pip -V;
