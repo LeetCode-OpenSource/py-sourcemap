@@ -133,7 +133,7 @@ workflows:
             - build35
           filters:
             tags:
-              only: /.*/
+              only: /^v.*/
             branches:
               only: master
       - build36:
@@ -144,7 +144,7 @@ workflows:
             - build36
           filters:
             tags:
-              only: /.*/
+              only: /^v.*/
             branches:
               only: master
       - build37:
@@ -155,7 +155,7 @@ workflows:
             - build37
           filters:
             tags:
-              only: /.*/
+              only: /^v.*/
             branches:
               only: master
       - pip_deploy:
@@ -165,6 +165,6 @@ workflows:
             - deploy37
           filters:
             tags:
-              only: /.*/
+              only: /^v.*/
             branches:
               only: master
