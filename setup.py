@@ -8,7 +8,7 @@ from setuptools import setup
 from setuptools.command.install import install
 
 
-version = '0.2.3'
+version = '0.2.4'
 local_build = os.environ.get('LOCAL', 0)
 
 
