@@ -22,14 +22,14 @@ install:
 
 script: |
   python compile.py build && \
-  cp build/lib/py_sourcemap/*.so py_sourcemap/ && \
+  cp build/lib/py_sourcemap/*.so py_sourcemap/py_sourcemap.so && \
   $HOME/.local/bin/nosetests
 
 deploy:
   provider: releases
   api_key:
     secure: $GITHUB_TOKEN
-  file: build/lib/py_sourcemap/*.so
+  file: py_sourcemap/py_sourcemap.so
   skip_cleanup: true
   on:
     tags: true
