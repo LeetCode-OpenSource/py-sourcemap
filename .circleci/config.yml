@@ -95,8 +95,7 @@ jobs:
       - image: broooooklyn/rust-python:latest
     working_directory: /mnt/crate
     steps:
-      - attach_workspace:
-          at: "."
+      - checkout
       - run: 
           name: 'Deploy to Github Release'
           command: pip install -r requirement-dev.txt && make release
