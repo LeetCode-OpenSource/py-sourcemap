@@ -40,8 +40,13 @@ deploy: &deploy
     - run: 
         name: 'Deploy to Github Release'
         command: |
-          export GIT_TAG="$(git describe --tags $(git rev-list --tags --max-count=1))"; \
-          ghr -u "${CIRCLE_PROJECT_USERNAME}" -r "${CIRCLE_PROJECT_REPONAME}" "${GIT_TAG}" build/lib/py_sourcemap/*.so
+          if git log -1 --pretty=%B | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$";
+          then
+            export GIT_TAG="$(git describe --tags $(git rev-list --tags --max-count=1))"; \
+            ghr -u "${CIRCLE_PROJECT_USERNAME}" -r "${CIRCLE_PROJECT_REPONAME}" "${GIT_TAG}" build/lib/py_sourcemap/*.so
+          else
+            echo "Not a release, skipping publish"
+          fi
 
 version: 2
 jobs:
@@ -98,7 +103,13 @@ jobs:
       - checkout
       - run: 
           name: 'Deploy to Github Release'
-          command: pip install -r requirement-dev.txt && make release
+          command: |
+            if git log -1 --pretty=%B | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$";
+            then
+              pip install -r requirement-dev.txt && make release
+            else
+              echo "Not a release, skipping publish"
+            fi
 
   nightly:
     machine: true
