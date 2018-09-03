@@ -4,20 +4,26 @@ python:
   - "3.6"
   - "3.7"
 os: osx
+osx_image: xcode9.3
 cache: cargo
 before_install:
   - brew update
   - brew install rust
   - rustup default nightly
 
+install:
+  - pip install -r requirements-dev.txt
+
 script: |
-  python compile.py build
+  python compile.py build && \
+  cp build/lib/py_sourcemap/*.so py_sourcemap/ && \
+  nosetests
 
 deploy:
   provider: releases
   api_key:
     secure: $GITHUB_TOKEN
-  file: build/lib/py_sourcemap/py_sourcemap.so
+  file: build/lib/py_sourcemap/*.so
   skip_cleanup: true
   on:
     tags: true
