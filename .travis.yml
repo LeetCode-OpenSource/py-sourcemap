@@ -24,7 +24,7 @@ script: |
   python compile.py build && \
   cp build/lib/py_sourcemap/*.so py_sourcemap/py_sourcemap.so && \
   mkdir -p natives && \
-  cp py_sourcemap/py_sourcemap.so "natives/py_sourcemap.cpython-m${PYTHON_NATIVE_ABI}-x86_64-apple-darwin.so" && \
+  cp py_sourcemap/py_sourcemap.so "natives/py_sourcemap.cpython-${PYTHON_NATIVE_ABI}m-x86_64-apple-darwin.so" && \
   $HOME/.local/bin/nosetests
 
 deploy:

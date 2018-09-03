@@ -1,0 +1,55 @@
+environment:
+
+  matrix:
+    # For Python versions available on Appveyor, see
+    # http://www.appveyor.com/docs/installed-software#python
+    # The list here is complete (excluding Python 2.6, which
+    # isn't covered by this document) at the time of writing.
+    - PYTHON: "C:\\Python35"
+      BITS: 32
+    - PYTHON: "C:\\Python35-x64"
+      BITS: 64
+    - PYTHON: "C:\\Python36"
+      BITS: 32
+    - PYTHON: "C:\\Python36-x64"
+      BITS: 64
+    - PYTHON: "C:\\Python37"
+      BITS: 32
+    - PYTHON: "C:\\Python37-x64"
+      BITS: 64
+
+install:
+  # We need wheel installed to build wheels
+  - IF "%BITS%" == "32" SET ARCH=i686
+  - IF "%BITS%" == "64" SET ARCH=x86_64
+  - curl -sSf -o rustup-init.exe https://win.rustup.rs
+  - rustup-init.exe --default-host "%ARCH%-pc-windows-gnu" --default-toolchain nightly -y
+  - SET PATH=C:\Users\appveyor\.cargo\bin;C:\msys64\mingw%BITS%\bin;%PATH%;C:\msys64\usr\bin
+  - rustc -Vv
+  - cargo -Vv
+  - "%PYTHON%\\python.exe -m pip install wheel"
+  - pip install -r requirement-dev.txt --user
+
+build:
+  - "build.cmd %PYTHON%\\python.exe compile.py build"
+
+test_script:
+  # Put your test command here.
+  # If you don't need to build C extensions on 64-bit Python 3.3 or 3.4,
+  # you can remove "build.cmd" from the front of the command, as it's
+  # only needed to support those cases.
+  # Note that you must use the environment variable %PYTHON% to refer to
+  # the interpreter you're using - Appveyor does not do anything special
+  # to put the Python version you want to use on PATH.
+  - "build.cmd %PYTHON%\\python.exe setup.py test"
+
+after_test:
+  # This step builds your wheels.
+  # Again, you only need build.cmd if you're building C extensions for
+  # 64-bit Python 3.3/3.4. And you need to use %PYTHON% to get the correct
+  # interpreter
+  - "build.cmd %PYTHON%\\python.exe setup.py bdist_wheel"
+
+artifacts:
+  # bdist_wheel puts your built wheel in the dist directory
+  - path: dist\*
