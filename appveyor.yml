@@ -6,17 +6,29 @@ environment:
     # The list here is complete (excluding Python 2.6, which
     # isn't covered by this document) at the time of writing.
     - PYTHON: "C:\\Python35"
+      PYVERSION: 35
       BITS: 32
+      ARC: "win32"
     - PYTHON: "C:\\Python35-x64"
+      PYVERSION: 35
       BITS: 64
+      ARC: "win_amd64"
     - PYTHON: "C:\\Python36"
+      PYVERSION: 36
       BITS: 32
+      ARC: "win32"
     - PYTHON: "C:\\Python36-x64"
+      PYVERSION: 36
       BITS: 64
+      ARC: "win_amd64"
     - PYTHON: "C:\\Python37"
+      PYVERSION: 37
       BITS: 32
+      ARC: "win32"
     - PYTHON: "C:\\Python37-x64"
+      PYVERSION: 37
       BITS: 64
+      ARC: "win_amd64"
 
 install:
   # We need wheel installed to build wheels
@@ -24,14 +36,20 @@ install:
   - IF "%BITS%" == "64" SET ARCH=x86_64
   - curl -sSf -o rustup-init.exe https://win.rustup.rs
   - rustup-init.exe --default-host "%ARCH%-pc-windows-gnu" --default-toolchain nightly -y
-  - SET PATH=C:\Users\appveyor\.cargo\bin;C:\msys64\mingw%BITS%\bin;%PATH%;C:\msys64\usr\bin
+  - SET PYTHONPATH=%PYTHON%;%PYTHON%\Scripts;
+  - SET PATH=%PYTHON%;%PYTHON%\Scripts;%PYTHON%\Lib;%PYTHON%\DLLs;%PYTHON%\Lib\lib-tk;C:\Users\appveyor\.cargo\bin;C:\msys64\mingw%BITS%\bin;%PATH%;C:\msys64\usr\bin;
   - rustc -Vv
   - cargo -Vv
-  - "%PYTHON%\\python.exe -m pip install wheel"
-  - pip install -r requirement-dev.txt --user
+  - python -V
+  - ls %PYTHON%\Scripts
+  - "%PYTHON%\\python.exe -m pip install --upgrade pip"
+  - "%PYTHON%\\python.exe -m pip install wheel setuptools-rust"
+  - "%PYTHON%\\python.exe -m pip install -r requirement-dev.txt"
 
-build:
-  - "build.cmd %PYTHON%\\python.exe compile.py build"
+build_script:
+  - "%PYTHON%\\python.exe compile.py build"
+  - ls build\lib\py_sourcemap
+  - copy "build\\lib\\py_sourcemap\\py_sourcemap.cp%PYVERSION%-%ARC%.pyd" py_sourcemap\py_sourcemap.pyd
 
 test_script:
   # Put your test command here.
@@ -41,15 +59,11 @@ test_script:
   # Note that you must use the environment variable %PYTHON% to refer to
   # the interpreter you're using - Appveyor does not do anything special
   # to put the Python version you want to use on PATH.
-  - "build.cmd %PYTHON%\\python.exe setup.py test"
+  - "%PYTHON%\\python.exe -m nose"
 
 after_test:
   # This step builds your wheels.
   # Again, you only need build.cmd if you're building C extensions for
   # 64-bit Python 3.3/3.4. And you need to use %PYTHON% to get the correct
   # interpreter
-  - "build.cmd %PYTHON%\\python.exe setup.py bdist_wheel"
-
-artifacts:
-  # bdist_wheel puts your built wheel in the dist directory
-  - path: dist\*
+  - "ls build\\lib\\py_sourcemap"
