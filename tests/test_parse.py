@@ -5,11 +5,11 @@ from py_sourcemap import SourcemapParser
 
 class TestParser(TestCase):
     def setUp(self):
-        self.sourcemap = SourcemapParser("./tests/index.js.map")
+        self.parser = SourcemapParser('./tests/index.js.map')
 
     def test_parse_trace(self):
-        result = self.sourcemap.original_location_for(1, 195303)
-        self.assertEqual(result[0], 22)
-        self.assertEqual(result[1], 41)
-        self.assertEqual(result[2][-13:], 'TopicList.jsx')
-        self.assertEqual(result[3], 'edges')
+        token = self.parser.lookup(1, 195303)
+        self.assertEqual(token.src_line, 22)
+        self.assertEqual(token.src_col, 41)
+        self.assertEqual(token.source[-13:], 'TopicList.jsx')
+        self.assertEqual(token.name, 'edges')
