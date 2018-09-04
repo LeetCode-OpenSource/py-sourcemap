@@ -26,5 +26,6 @@ A tiny [source-map-mappings](https://github.com/fitzgen/source-map-mappings) bin
 from py_sourcemap import SourcemapParser
 
 sourcemap_parser = SourcemapParser("./tests/index.js.map")
-sourcemap_parser.original_location_for(0, 195302) # (original_line, original_column, source_file_name, function_name_in_source)
+# pass line, column in, start from 1
+sourcemap_parser.original_location_for(1, 195303) # (original_line, original_column, source_file_name, function_name_in_source) start from 1
 ```

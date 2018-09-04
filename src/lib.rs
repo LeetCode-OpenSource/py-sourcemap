@@ -57,7 +57,7 @@ impl SourcemapParser {
     if let Some(Mapping { original, .. }) =
       self
         .parsed_map
-        .original_location_for(generated_line, generated_column, Bias::LeastUpperBound)
+        .original_location_for(generated_line - 1, generated_column - 1, Bias::LeastUpperBound)
     {
       match original {
         Some(location) => {
