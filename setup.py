@@ -63,6 +63,7 @@ setup(
     packages=['py_sourcemap'],
     description='A tiny source-map-mappings bindings for python using PyO3',
     long_description=long_description,
+    long_description_content_type='text/markdown',
     url='https://github.com/LeetCode-OpenSource/py-sourcemap',
     classifiers=[
         'Development Status :: 4 - Beta',
