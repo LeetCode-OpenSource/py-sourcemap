@@ -27,8 +27,10 @@ class PostInstallCommand(install):
         system = platform.system()
         if system == 'Linux':
             usr_platform = 'x86_64-linux-gnu'
+        if system == 'Darwin':
+            usr_platform = 'x86_64-apple-darwin'
         else:
-            raise Exception('This lib is only supporting Linux for now.')
+            raise Exception('This lib is only supporting Linux & macOS for now.')
         download_url = url_template.format(tag=version_tag,
                                            py_ver=py_version,
                                            platform=usr_platform)
