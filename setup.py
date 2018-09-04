@@ -28,7 +28,7 @@ class PostInstallCommand(install):
         system = platform.system()
         if system == 'Linux':
             usr_platform = 'x86_64-linux-gnu'
-        if system == 'Darwin':
+        elif system == 'Darwin':
             usr_platform = 'x86_64-apple-darwin'
         else:
             raise Exception('This lib is only supporting Linux & macOS for now.')
