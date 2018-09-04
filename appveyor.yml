@@ -71,12 +71,16 @@ after_test:
   # interpreter
   - "ls build\\lib\\py_sourcemap"
 
+artifacts:
+  - path: build\lib\py_sourcemap\*.pyd
+    name: Binary
+
 deploy:
   provider: GitHub
   description: $(APPVEYOR_REPO_TAG_NAME)
   auth_token:
     secure: WOwBw2Tzivslwkbev6rJfhZfUbcfRvENwqQZfRZBL5R6L+Cb0y2tv5lyobrZiWPq
-  artifact: ./build/lib/py_sourcemap/*.pyd
+  artifact: Binary
   draft: false
   prerelease: false
   on:
