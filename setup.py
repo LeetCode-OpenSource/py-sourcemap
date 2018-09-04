@@ -1,6 +1,5 @@
 import platform
 import os
-import sys
 
 from urllib.request import urlopen
 
@@ -22,8 +21,10 @@ class PostInstallCommand(install):
     def run(self):
         version_tag = 'v{}'.format(version)
         url_template = 'https://github.com/LeetCode-OpenSource/py-sourcemap/releases/download/{tag}/py_sourcemap.cpython-{py_ver}-{platform}.so'
-        py_version = '{}{}m'.format(sys.version_info.major,
-                                    sys.version_info.minor)
+        (major, minor, _) = platform.python_version_tuple()
+        if major != '3' or not(minor in ['5', '6', '7']):
+            raise Exception('Only python 3.5, 3.6, 3.7 are supported')
+        py_version = '{}{}m'.format(major, minor)
         system = platform.system()
         if system == 'Linux':
             usr_platform = 'x86_64-linux-gnu'
