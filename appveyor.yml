@@ -46,6 +46,9 @@ install:
   - "%PYTHON%\\python.exe -m pip install wheel setuptools-rust"
   - "%PYTHON%\\python.exe -m pip install -r requirement-dev.txt"
 
+cache:
+  - target
+
 build_script:
   - "%PYTHON%\\python.exe compile.py build"
   - ls build\lib\py_sourcemap
@@ -67,3 +70,15 @@ after_test:
   # 64-bit Python 3.3/3.4. And you need to use %PYTHON% to get the correct
   # interpreter
   - "ls build\\lib\\py_sourcemap"
+
+deploy:
+  provider: GitHub
+  description: $(APPVEYOR_REPO_TAG_NAME)
+  auth_token:
+    secure: WOwBw2Tzivslwkbev6rJfhZfUbcfRvENwqQZfRZBL5R6L+Cb0y2tv5lyobrZiWPq
+  artifact: ./build/lib/py_sourcemap/*.pyd
+  draft: false
+  prerelease: false
+  on:
+    branch: master                 # release from master branch only
+    appveyor_repo_tag: true        # deploy on tag push only
