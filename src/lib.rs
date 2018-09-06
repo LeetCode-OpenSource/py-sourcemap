@@ -53,7 +53,7 @@ impl SourcemapParser {
     &self,
     generated_line: u32,
     generated_column: u32,
-  ) -> PyResult<(u32, u32, Option<String>, Option<String>)> {
+  ) -> PyResult<Option<(u32, u32, Option<String>, Option<String>)>> {
     if let Some(Mapping { original, .. }) =
       self
         .parsed_map
@@ -71,17 +71,17 @@ impl SourcemapParser {
             .sources
             .get(location.source as usize)
             .map(|str_slice| str_slice.to_string());
-          return Ok((
+          return Ok(Some((
             location.original_line + 1,
             location.original_column + 1,
             source,
             name,
-          ));
+          )));
         }
-        None => return Err(PyErr::new::<exc::TypeError, _>("No original lines")),
+        None => return Ok(None),
       };
     }
-    Err(PyErr::new::<exc::TypeError, _>("No sources found"))
+    Ok(None)
   }
 }
 
