@@ -1,5 +1,4 @@
 environment:
-
   matrix:
     # For Python versions available on Appveyor, see
     # http://www.appveyor.com/docs/installed-software#python
@@ -62,7 +61,7 @@ test_script:
   # Note that you must use the environment variable %PYTHON% to refer to
   # the interpreter you're using - Appveyor does not do anything special
   # to put the Python version you want to use on PATH.
-  - "%PYTHON%\\python.exe -m nose"
+  - "%PYTHON%\\python.exe -m pytest"
 
 after_test:
   # This step builds your wheels.
@@ -84,5 +83,5 @@ deploy:
   draft: false
   prerelease: false
   on:
-    branch: master                 # release from master branch only
-    appveyor_repo_tag: true        # deploy on tag push only
+    branch: master # release from master branch only
+    appveyor_repo_tag: true # deploy on tag push only

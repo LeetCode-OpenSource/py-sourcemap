@@ -1,8 +1,8 @@
-from .py_sourcemap import SourcemapParser as InternalParser
+from .py_sourcemap import SourcemapParser
 
 name = 'py_sourcemap'
 
-__all__ = ["SourcemapParser"]
+__all__ = ["PySourcemapParser"]
 
 
 class Token:
@@ -29,9 +29,9 @@ class Token:
         )
 
 
-class SourcemapParser:
+class PySourcemapParser:
     def __init__(self, map_path):
-        self.parser = InternalParser(map_path)
+        self.parser = SourcemapParser(map_path)
 
     def lookup(self, line, column):
         (src_line, src_col, source, name) = self.parser.original_location_for(line, column)

@@ -5,7 +5,8 @@ import sys
 from urllib.request import urlopen
 
 from setuptools import setup
-from setuptools.command.install import install
+from setuptools.command.install import install as InstallCommand
+from setuptools.command.test import test as TestCommand
 
 
 version = '0.3.8'
@@ -16,7 +17,7 @@ with open('README.md', 'r') as f:
     long_description = f.read()
 
 
-class PostInstallCommand(install):
+class PostInstallCommand(InstallCommand):
     """Post-installation for installation mode."""
 
     def run(self):
@@ -51,11 +52,22 @@ class PostInstallCommand(install):
             with open(dist, 'wb') as f:
                 built_lib = urlopen(download_url).read()
                 f.write(built_lib)
-        install.run(self)
+        InstallCommand.run(self)
+
+
+class PyTestCommand(TestCommand):
+    user_options = []
+
+    def run(self):
+        self.run_command('test_rust')
+
+        import subprocess
+
+        subprocess.check_call([sys.executable, '-m', 'pytest', 'tests'])
 
 
 install_requires = ['wheel']
-tests_require = install_requires + ['nose']
+tests_require = install_requires + ['pytest', 'pytest-benchmark']
 
 setup(
     name='py-sourcemap',
@@ -79,9 +91,9 @@ setup(
     ],
     install_requires=install_requires,
     tests_require=tests_require,
-    test_suite='nose.collector',
     cmdclass={
         'install': PostInstallCommand,
+        # 'test': PyTestCommand,
     },
     # rust extensions are not zip safe, just like C-extensions.
     zip_safe=False)

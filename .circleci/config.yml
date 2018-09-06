@@ -18,7 +18,7 @@ build: &build
         name: Test 35
         command: |
           cp build/lib/py_sourcemap/*.so py_sourcemap/ && \
-          nosetests
+          pytest
     - run:
         name: Prune the output files
         command: |
@@ -37,8 +37,8 @@ deploy: &deploy
   steps:
     - attach_workspace:
         at: "."
-    - run: 
-        name: 'Deploy to Github Release'
+    - run:
+        name: "Deploy to Github Release"
         command: |
           if git log -1 --pretty=%B | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$";
           then
@@ -78,7 +78,7 @@ jobs:
     <<: *build
     docker:
       - image: broooooklyn/rust-python:3.5
-   
+
   build36:
     <<: *build
     docker:
@@ -88,7 +88,7 @@ jobs:
     <<: *build
     docker:
       - image: broooooklyn/rust-python:3.7
-  
+
   deploy35: *deploy
 
   deploy36: *deploy
@@ -101,8 +101,8 @@ jobs:
     working_directory: /mnt/crate
     steps:
       - checkout
-      - run: 
-          name: 'Deploy to Github Release'
+      - run:
+          name: "Deploy to Github Release"
           command: |
             if git log -1 --pretty=%B | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$";
             then
