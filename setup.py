@@ -6,7 +6,6 @@ from urllib.request import urlopen
 
 from setuptools import setup
 from setuptools.command.install import install as InstallCommand
-from setuptools.command.test import test as TestCommand
 
 
 version = '0.3.8'
@@ -55,17 +54,6 @@ class PostInstallCommand(InstallCommand):
         InstallCommand.run(self)
 
 
-class PyTestCommand(TestCommand):
-    user_options = []
-
-    def run(self):
-        self.run_command('test_rust')
-
-        import subprocess
-
-        subprocess.check_call([sys.executable, '-m', 'pytest', 'tests'])
-
-
 install_requires = ['wheel']
 tests_require = install_requires + ['pytest', 'pytest-benchmark']
 
@@ -93,7 +81,6 @@ setup(
     tests_require=tests_require,
     cmdclass={
         'install': PostInstallCommand,
-        # 'test': PyTestCommand,
     },
     # rust extensions are not zip safe, just like C-extensions.
     zip_safe=False)
