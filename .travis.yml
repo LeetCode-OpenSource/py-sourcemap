@@ -39,6 +39,6 @@ deploy:
 
 deploy:
   provider: script
-  script: python upload-ali-oss.py "natives/py_sourcemap.cpython-${PYTHON_NATIVE_ABI}m-x86_64-apple-darwin.so"
+  script: python upload-ali-oss.py natives/*.so
   on:
     tags: true
