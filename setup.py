@@ -1,15 +1,13 @@
-import platform
 import os
-import sys
-
-from urllib.request import urlopen
 
 from setuptools import setup
 from setuptools.command.install import install as InstallCommand
 
+from tools.download import get_remote_binary
+
 
 version = '0.3.13'
-local_build = os.environ.get('LOCAL', 0)
+local_install = os.environ.get('LOCAL', 0)
 
 
 with open('README.md', 'r') as f:
@@ -20,37 +18,13 @@ class PostInstallCommand(InstallCommand):
     """Post-installation for installation mode."""
 
     def run(self):
-        version_tag = 'v{}'.format(version)
-        url_template = 'https://github.com/LeetCode-OpenSource/py-sourcemap/releases/download/{tag}/py_sourcemap.{py_ver}-{platform}.{ext}'
-        (major, minor, _) = platform.python_version_tuple()
-        if major != '3' or not(minor in ['5', '6', '7']):
-            raise Exception('Only python 3.5, 3.6, 3.7 are supported')
-        system = platform.system()
-        if system == 'Linux':
-            py_version = 'cpython-{}{}m'.format(major, minor)
-            usr_platform = 'x86_64-linux-gnu'
-            ext = 'so'
-        elif system == 'Darwin':
-            py_version = 'cpython-{}{}m'.format(major, minor)
-            usr_platform = 'x86_64-apple-darwin'
-            ext = 'so'
-        elif system == 'Windows':
-            py_version = 'cp{}{}'.format(major, minor)
-            # from https://docs.python.org/3/library/platform.html
-            is_64bits = sys.maxsize > 2**32
-            usr_platform = 'win_amd64' if is_64bits else 'win32'
-            ext = 'pyd'
-        else:
-            raise Exception('Your system is unrecognized: {}'.format(system))
-        download_url = url_template.format(tag=version_tag,
-                                           py_ver=py_version,
-                                           platform=usr_platform,
-                                           ext=ext)
-        dist = os.path.join(self.build_lib, 'py_sourcemap/py_sourcemap.so')
-        if not local_build:
+        if not local_install:
+            dist = os.path.join(self.build_lib, 'py_sourcemap/py_sourcemap.so')
+            binary_fp = get_remote_binary(version)
+
             with open(dist, 'wb') as f:
-                built_lib = urlopen(download_url).read()
-                f.write(built_lib)
+                f.write(binary_fp.read())
+
         InstallCommand.run(self)
 
 
