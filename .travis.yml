@@ -36,3 +36,9 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
+
+deploy:
+  provider: script
+  script: python upload-ali-oss.py
+  on:
+    tags: true
