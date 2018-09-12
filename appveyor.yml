@@ -74,6 +74,9 @@ artifacts:
   - path: build\lib\py_sourcemap\*.pyd
     name: Binary
 
+before_deploy:
+  - "%PYTHON%\\python.exe upload-ali-oss.py"
+
 deploy:
   provider: GitHub
   description: $(APPVEYOR_REPO_TAG_NAME)

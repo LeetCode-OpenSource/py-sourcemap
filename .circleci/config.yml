@@ -32,7 +32,7 @@ build: &build
 
 deploy: &deploy
   docker:
-    - image: tsub/ghr:latest
+    - image: broooooklyn/rust-python:latest
   working_directory: /mnt/crate
   steps:
     - attach_workspace:
@@ -43,7 +43,8 @@ deploy: &deploy
           if git log -1 --pretty=%B | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$";
           then
             export GIT_TAG="$(git describe --tags $(git rev-list --tags --max-count=1))"; \
-            ghr -u "${CIRCLE_PROJECT_USERNAME}" -r "${CIRCLE_PROJECT_REPONAME}" "${GIT_TAG}" build/lib/py_sourcemap/*.so
+            ghr -u "${CIRCLE_PROJECT_USERNAME}" -r "${CIRCLE_PROJECT_REPONAME}" "${GIT_TAG}" build/lib/py_sourcemap/*.so && \
+            python upload-ali-oss.py
           else
             echo "Not a release, skipping publish"
           fi

@@ -2,6 +2,8 @@ FROM ubuntu:18.04
 
 ARG PYTHON_VERSION=3.6
 
+ENV GHR_VERSION="0.9.0"
+
 ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
     PATH=/usr/local/cargo/bin:$PATH \
@@ -18,11 +20,19 @@ RUN apt-get update && \
     if [ $PYTHON_VERSION = '3.6' ]; \
     then \
       apt-get install python3-pip -y --no-install-recommends && \
-      ln -sf /usr/bin/pip3 /usr/bin/pip; \
+      ln -sf /usr/bin/pip3 /usr/bin/pip && \
+      pip install setuptools; \
     else \
       curl https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION}; \
     fi && \
-    pip install --upgrade pip
+    pip install --upgrade pip && \
+    curl -fSL -o ghr.tar.gz "https://github.com/tcnksm/ghr/releases/download/v${GHR_VERSION}/ghr_v${GHR_VERSION}_linux_amd64.tar.gz" && \
+    tar -xvzf ghr.tar.gz && \
+    mv ghr_v${GHR_VERSION}_linux_amd64/ghr /usr/local/bin && \
+    chown root:root /usr/local/bin/ghr && \
+    rm -r \
+        ghr.tar.gz \
+        ghr_v${GHR_VERSION}_linux_amd64
 
 RUN set -eux; \
     dpkgArch="$(dpkg --print-architecture)"; \
