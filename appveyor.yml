@@ -75,7 +75,7 @@ artifacts:
     name: Binary
 
 before_deploy:
-  - "%PYTHON%\\python.exe upload-ali-oss.py"
+  - "%PYTHON%\\python.exe upload-ali-oss.py build\\lib\\py_sourcemap\\py_sourcemap.cp%PYVERSION%-%ARC%.pyd"
 
 deploy:
   provider: GitHub

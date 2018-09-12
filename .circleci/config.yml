@@ -38,13 +38,16 @@ deploy: &deploy
     - attach_workspace:
         at: "."
     - run:
+        name: "Install Requirements"
+        command: pip install -r requirement-dev.txt
+    - run:
         name: "Deploy to Github Release"
         command: |
           if git log -1 --pretty=%B | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$";
           then
             export GIT_TAG="$(git describe --tags $(git rev-list --tags --max-count=1))"; \
             ghr -u "${CIRCLE_PROJECT_USERNAME}" -r "${CIRCLE_PROJECT_REPONAME}" "${GIT_TAG}" build/lib/py_sourcemap/*.so && \
-            python upload-ali-oss.py
+            python upload-ali-oss.py build/lib/py_sourcemap/*.so
           else
             echo "Not a release, skipping publish"
           fi
