@@ -6,7 +6,7 @@ from setuptools.command.install import install as InstallCommand
 from tools.download import get_remote_binary
 
 
-version = '0.3.13'
+version = '0.4.0'
 local_install = os.environ.get('LOCAL', 0)
 
 
