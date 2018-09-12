@@ -55,7 +55,7 @@ class PostInstallCommand(InstallCommand):
 
 
 install_requires = ['wheel']
-tests_require = install_requires + ['pytest', 'pytest-benchmark']
+tests_require = install_requires + ['pytest']
 
 setup(
     name='py-sourcemap',
