@@ -40,5 +40,6 @@ deploy:
 deploy:
   provider: script
   script: python upload-ali-oss.py natives/*.so
+  skip_cleanup: true
   on:
     tags: true
