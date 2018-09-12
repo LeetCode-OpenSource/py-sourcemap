@@ -8,6 +8,7 @@ build
 *.egg-info
 dist
 .pytest_cache
+venv
 
 # editor related
 .vscode

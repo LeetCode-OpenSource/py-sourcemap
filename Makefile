@@ -1,3 +1,8 @@
+init:
+	python -m venv ./venv
+	pip install --upgrade pip
+	pip install -r requirement-dev.txt
+
 format:
 	yapf **/*.py -i
 

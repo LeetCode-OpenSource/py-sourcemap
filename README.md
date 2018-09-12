@@ -4,16 +4,15 @@
 [![Build Status](https://travis-ci.com/LeetCode-OpenSource/py-sourcemap.svg?branch=master)](https://travis-ci.com/LeetCode-OpenSource/py-sourcemap)
 [![Build status](https://ci.appveyor.com/api/projects/status/ubn6tpgyryapy319/branch/master?svg=true)](https://ci.appveyor.com/project/Brooooooklyn/py-sourcemap/branch/master)
 
-
 A tiny [source-map-mappings](https://github.com/fitzgen/source-map-mappings) bindings for python using [PyO3](https://github.com/PyO3/pyo3)
 
 # Platform Support
 
 ### Operating Systems
 
-| Linux  | macOS | Windows x32 | Windows x64 |
-| ------ | ----- | ----------- | ----------- |
-| ✓      | ✓     | ✓           | ✓           |
+| Linux | macOS | Windows x86 | Windows x64 |
+| ----- | ----- | ----------- | ----------- |
+| ✓     | ✓     | ✓           | ✓           |
 
 ### Python
 
@@ -22,6 +21,7 @@ A tiny [source-map-mappings](https://github.com/fitzgen/source-map-mappings) bin
 | ✓         | ✓         | ✓         |
 
 # Usage
+
 ```python
 from py_sourcemap import SourcemapParser
 
