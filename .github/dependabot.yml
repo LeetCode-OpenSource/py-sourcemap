@@ -1,0 +1,25 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "21:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: twine
+    versions:
+    - 3.3.0
+    - 3.4.0
+  - dependency-name: pytest
+    versions:
+    - 6.2.2
+  - dependency-name: oss2
+    versions:
+    - 2.13.1
+  - dependency-name: pycryptodome
+    versions:
+    - 3.9.9
+  - dependency-name: yapf
+    versions:
+    - 0.30.0
